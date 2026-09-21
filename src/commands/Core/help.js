@@ -84,7 +84,8 @@ export async function createInitialHelpMenu(client) {
                 name: '🚀 Getting Started',
                 value: [
                     '**1. Launch setup** — Run `/configwizard` to configure prefix, mod role, and logs.',
-                    '**2. Enable systems** — Use `/commands dashboard` to turn categories on or off.',                    '**3. Browse commands** — Use the menu below to view categories and commands.',
+                    '**2. Enable systems** — Use `/commands dashboard` to turn categories on or off.',
+                    '**3. Browse commands** — Use the menu below to view categories and commands.',
                 ].join('\n'),
                 inline: false,
             },
@@ -99,7 +100,7 @@ export async function createInitialHelpMenu(client) {
             },
             {
                 name: '\u200B',
-                value: `-# ${botName} `,
+                value: `-# ${botName} is [open source](https://youtu.be/1jCZX8s3bJE?si=NPOYx-vxVE1I5vJK)`,
                 inline: false,
             },
         ],
@@ -110,7 +111,11 @@ export async function createInitialHelpMenu(client) {
     });
     embed.setTimestamp();
 
-       
+    const supportButton = new ButtonBuilder()
+        .setLabel("Support Server")
+        .setURL("https://discord.gg/QnWNz2dKCE")
+        .setStyle(ButtonStyle.Link);
+
     const selectRow = createSelectMenu(
         CATEGORY_SELECT_ID,
         "Select to view the commands",
@@ -118,7 +123,6 @@ export async function createInitialHelpMenu(client) {
     );
 
     const buttonRow = new ActionRowBuilder().addComponents([
-        bugReportButton,
         supportButton,
     ]);
 
@@ -135,10 +139,8 @@ export default {
         .setDescription("Displays the help menu with all available commands"),
 
     async execute(interaction, guildConfig, client) {
-        
-        const { MessageFlags } = await import('discord.js');
         await InteractionHelper.safeDefer(interaction);
-        
+
         const { embeds, components } = await createInitialHelpMenu(client);
 
         await InteractionHelper.safeEditReply(interaction, {
@@ -163,7 +165,7 @@ export default {
                     components: [],
                 });
             } catch (error) {
-                
+                // no-op
             }
         }, HELP_MENU_TIMEOUT_MS);
     },
